@@ -1,50 +1,100 @@
 import React, { Component } from 'react';
 import './App.css';
+const DARK = {
+  background: `hsl(207, 26%, 17%)`,
+  color: `hsl(0, 0%, 100%)`,
+  elements: `hsl(209, 23%, 22%)`,
+};
+const LIGHT = {
+  background: `hsl(0, 0%, 98%)`,
+  color: `hsl(200, 15%, 8%)`,
+  elements: `hsl(0, 0%, 100%)`,
+};
+
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {}
+    this.state = {
+      currentTheme: DARK,
+      theme: `Dark Mode`,
+      previousTheme: LIGHT,
+      allCountries: [],
+      displayedCountries: [],
+      filteredCountries: [],
+      detailCountry: null,
+      currentPage: `home`,
+    }
+    this.changeTheme = this.changeTheme.bind(this);
   }
-  
+
+    changeTheme(){
+    if(this.state.currentTheme === DARK){
+          this.setState({
+            currentTheme: LIGHT,
+            theme: `Light Mode`
+          });
+    }else{
+          this.setState({
+            currentTheme: DARK,
+            theme: `Dark Mode`
+          });
+    }
+  }
+
   render() {
     return (
-      <div className="App">
-      <NavBar />
-      <SearchingSection />
-      <HomeSection />
-      <DetailSection />  
+      <div className="App" style={{background: this.state.currentTheme.background }}>
+      <NavBar style={this.state} changeTheme={this.changeTheme}/>
+      <CurrentPage state={this.state}/>
       </div>
     );
   }
 }
 
-class NavBar extends App {  
+class NavBar extends Component {
   render() {
+    let style = this.props.style.currentTheme;
     return (
-      <nav>
+      <nav style={{background: style.elements, color: style.color}}>
       <div>
           <h1>Where in the World?</h1>
-          <button><i className="fas fa-moon"></i> Dark Mode</button>
+          <button  onClick={this.props.changeTheme}  style={{color: style.color}}><i className="fas fa-moon"></i> {this.props.style.theme}</button>
       </div>
       </nav>
     );
   }
 }
 
-class SearchingSection extends App {  
+class CurrentPage extends Component {
   render() {
+
+    if(this.props.state.currentPage === `home`){
+      return (
+        <React.Fragment>
+          <SearchingSection style={this.props.state.currentTheme}/>
+          <HomeSection />
+        </React.Fragment>);
+    }else{
+      return <DetailSection />; 
+    }
+  }
+}
+
+class SearchingSection extends Component {  
+  render() {
+    let style = this.props.style;
     return (
       <section className="search-options">
-      <div className="search-box">
+      <div className="search-box" style={{background: style.elements, color: style.color}}>
           <i className="fas fa-search"></i>
-          <input type="text" name="" id="search-input" placeholder="Search for a country..." />
+          <input type="text" name="" id="search-input" placeholder="Search for a country..." style={{color: style.color}}/>
       </div>
 
-      <div className="custom-select">
+      <div className="custom-select" style={{background: style.elements, color: style.color}}>
           <p>Filter by Region</p>
           <i className="fas fa-chevron-down"></i>
-          <ul className="custom-options">
+          <ul className="custom-options" style={{background: style.elements, color: style.color}}>
               <li>All</li>
               <li>Africa</li>
               <li>America</li>
@@ -58,7 +108,7 @@ class SearchingSection extends App {
   }
 }
 
-class HomeSection extends App {  
+class HomeSection extends Component {  
   render() {
     return (
       <section className="country-list">
@@ -76,7 +126,7 @@ class HomeSection extends App {
   }
 }
 
-class CountryCard extends HomeSection {
+class CountryCard extends Component {
   render(){
     return (
       <div className="country-card">
@@ -92,7 +142,7 @@ class CountryCard extends HomeSection {
   }
 }
 
-class DetailSection extends App {  
+class DetailSection extends Component {  
   render() {
     return (
       <section className="country-detail-container">

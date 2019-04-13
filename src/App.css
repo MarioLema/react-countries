@@ -21,6 +21,7 @@ White: rgb(255, 255, 255);
     font-size: 14px;
     font-family: 'Nunito Sans', sans-serif;
     background: rgb(32, 44, 54);
+    min-height: 100vh;
 }
 /*====================NAV ELEMENT=================*/
 nav {
