@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+const axios = require('axios');
 const DARK = {
   background: `hsl(207, 26%, 17%)`,
   color: `hsl(0, 0%, 100%)`,
@@ -22,7 +23,18 @@ class App extends Component {
       allCountries: [],
       displayedCountries: [],
       filteredCountries: [],
-      detailCountry: null,
+      detailCountry: {
+      flag: ``,
+      name: ``,
+      nativeName: ``,
+      population: ``,
+      region: ``,
+      subregion: ``,
+      capital: ``,
+      topLevelDomain: ``,
+      currencies: [],
+      languages: [],
+      },
       currentPage: `home`,
     }
     this.changeTheme = this.changeTheme.bind(this);
@@ -41,6 +53,27 @@ class App extends Component {
           });
     }
   }
+
+  componentDidMount() {
+    axios.get(`https://restcountries.eu/rest/v2/all`)
+    .then(function (response) {
+      this.setState({
+        allCountries: response.data,
+        filteredCountries: response.data,
+        displayedCountries: response.data,
+        detailCountry: response.data[17]
+      })
+    }.bind(this))
+    .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+
+  }
+
 
   render() {
     return (
@@ -73,10 +106,10 @@ class CurrentPage extends Component {
       return (
         <React.Fragment>
           <SearchingSection style={this.props.state.currentTheme}/>
-          <HomeSection />
+          <HomeSection countries={this.props.state}/>
         </React.Fragment>);
     }else{
-      return <DetailSection />; 
+      return <DetailSection country={this.props.state.detailCountry}/>; 
     }
   }
 }
@@ -108,33 +141,43 @@ class SearchingSection extends Component {
   }
 }
 
-class HomeSection extends Component {  
+class HomeSection extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = this.props.state;
+  //   this.listCountries = this.listCountries.bind(this);
+  // }
+  
+  
+  listCountries(){
+    let countries = this.props.countries.displayedCountries;
+    let countriesArray = [];
+    for(let i = 0; i < countries.length; i++){
+      countriesArray.push(<CountryCard country={countries[i]} key={countries[i].numericCode}/>)
+    }
+    return countriesArray;
+  }
   render() {
+
     return (
       <section className="country-list">
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-      <CountryCard />
-  </section>
+        {this.listCountries()}
+      </section>
     );
   }
 }
 
 class CountryCard extends Component {
   render(){
+    let country = this.props.country;
     return (
-      <div className="country-card">
-      <h1>Germany</h1>
+      <div className="country-card" >
+      <div style={{backgroundImage: `url(${country.flag})` }}></div>
+      <h1>{country.name}</h1>
       <ul>
-          <li>Population: 81,000,000</li>
-          <li>Region: Europe</li>
-          <li>Capital: Berlin</li>
+          <li>Population: {country.population}</li>
+          <li>Region: {country.region}</li>
+          <li>Capital: {country.capital}</li>
       </ul>
 
   </div>
@@ -144,27 +187,29 @@ class CountryCard extends Component {
 
 class DetailSection extends Component {  
   render() {
+    let country = this.props.country;
+    // <li><b>Currencies:</b>{country.currencies[0]}</li>
+    // <li><b>Languages:</b>{country.languages[0]}</li>
     return (
       <section className="country-detail-container">
       <button className="mini-button return-button"><i className="fas fa-long-arrow-alt-left"></i> Back</button>
       <div className="country-details">
-          <img src="https://restcountries.eu/data/col.svg" alt="" />
+          <img src={country.flag} alt="" />
 
           <div>
-              <h2>Belgium</h2>
+              <h2>{country.name}</h2>
               <div className="info-container">
               <ul>
-                  <li><b>Native Name:</b> Belgie</li>
-                  <li><b>Population:</b> 111002323</li>
-                  <li><b>Region:</b> Europe</li>
-                  <li><b>Subregion:</b> Western Europe</li>
-                  <li><b>Capital:</b> Brussels</li>
+                  <li><b>Native Name:</b> {country.nativeName}</li>
+                  <li><b>Population:</b> {country.population}</li>
+                  <li><b>Region:</b> {country.region}</li>
+                  <li><b>Subregion:</b> {country.subregion}</li>
+                  <li><b>Capital:</b> {country.capital}</li>
               </ul>
 
               <ul>
-                  <li><b>Top Level Domain:</b> .net</li>
-                  <li><b>Currencies:</b> skdjn</li>
-                  <li><b>Languages:</b> sssss,sssss,ssss</li>
+                  <li><b>Top Level Domain:</b> {country.topLevelDomain}</li>
+
               </ul>
           </div>
               <div>
