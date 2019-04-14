@@ -184,8 +184,9 @@ nav button {
 }
 
 .country-card h1 {
-    margin-bottom: 1rem;
-    margin-left: 1.5rem;
+	margin-bottom: 1rem;
+	margin-left: 1.5rem;
+	margin-right: 1rem;
 }
 
 .country-card ul {
@@ -271,7 +272,7 @@ nav button {
 
 .border-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     margin-top: 1rem;
     flex-wrap: wrap;
     width: 100%;
@@ -279,8 +280,9 @@ nav button {
 }
 
 .border-container button {
-    font-size: 0.7rem;
-    margin-bottom: 1rem;
+	font-size: 0.7rem;
+	margin-bottom: 1rem;
+	margin-right: 1rem;
 }
 
 @media screen and (min-width: 62rem) {
