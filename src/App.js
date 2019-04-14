@@ -38,6 +38,8 @@ class App extends Component {
       currentPage: `home`,
     }
     this.changeTheme = this.changeTheme.bind(this);
+    this.displayDetail = this.displayDetail.bind(this);
+    this.returnToHome = this.returnToHome.bind(this);
   }
 
     changeTheme(){
@@ -74,12 +76,35 @@ class App extends Component {
 
   }
 
+  displayDetail(event){
+    let alphacode;
+    if(event.target.classList.contains(`mini-button`)){
+      alphacode = event.target.attributes.alphacode.value;
+    }else{
+      alphacode = event.target.closest(`.country-card`).attributes.alphacode.value;
+    }
+    let index = null;
+    let i = 0;
+    while(index === null && i < this.state.allCountries.length){
+      if(this.state.allCountries[i].alpha3Code === alphacode) index = i;
+      i++;
+    }
+    this.setState({
+      detailCountry: this.state.allCountries[index],
+      currentPage: `detailPage`
+    });
+  }
+
+  returnToHome(){
+    this.setState({currentPage: `home`})
+  }
+
 
   render() {
     return (
       <div className="App" style={{background: this.state.currentTheme.background }}>
       <NavBar style={this.state} changeTheme={this.changeTheme}/>
-      <CurrentPage state={this.state}/>
+      <CurrentPage state={this.state} detailMethod={this.displayDetail} returnMethod={this.returnToHome}/>
       </div>
     );
   }
@@ -106,10 +131,10 @@ class CurrentPage extends Component {
       return (
         <React.Fragment>
           <SearchingSection style={this.props.state.currentTheme}/>
-          <HomeSection countries={this.props.state}/>
+          <HomeSection countries={this.props.state} detailMethod={this.props.detailMethod}/>
         </React.Fragment>);
     }else{
-      return <DetailSection country={this.props.state.detailCountry}/>; 
+      return <DetailSection allCountries={this.props.state.allCountries} country={this.props.state.detailCountry} detailMethod={this.props.detailMethod} returnMethod={this.props.returnMethod}/>; 
     }
   }
 }
@@ -141,19 +166,13 @@ class SearchingSection extends Component {
   }
 }
 
-class HomeSection extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = this.props.state;
-  //   this.listCountries = this.listCountries.bind(this);
-  // }
-  
+class HomeSection extends Component {  
   
   listCountries(){
     let countries = this.props.countries.displayedCountries;
     let countriesArray = [];
     for(let i = 0; i < countries.length; i++){
-      countriesArray.push(<CountryCard country={countries[i]} key={countries[i].numericCode}/>)
+      countriesArray.push(<CountryCard detailMethod={this.props.detailMethod} country={countries[i]} key={countries[i].numericCode}/>)
     }
     return countriesArray;
   }
@@ -168,10 +187,11 @@ class HomeSection extends Component {
 }
 
 class CountryCard extends Component {
+
   render(){
     let country = this.props.country;
     return (
-      <div className="country-card" >
+      <div className="country-card" onClick={this.props.detailMethod} alphacode={country.alpha3Code}>
       <div style={{backgroundImage: `url(${country.flag})` }}></div>
       <h1>{country.name}</h1>
       <ul>
@@ -185,14 +205,43 @@ class CountryCard extends Component {
   }
 }
 
-class DetailSection extends Component {  
+class DetailSection extends Component {
+  
+  currencyList(){
+    let currencyString= [];
+    let currenciesArray = this.props.country.currencies;
+    for(let i = 0; i < currenciesArray.length; i++){
+      currencyString.push(currenciesArray[i].name);
+    }
+    return currencyString.join(`, `);
+  }
+  languagesList(){
+    let languageString= [];
+    let languagesArray = this.props.country.languages;
+    for(let i = 0; i < languagesArray.length; i++){
+      languageString.push(languagesArray[i].name);
+    }
+    return languageString.join(`, `);
+  }
+
+  neighboursButtons(){
+    let neighbours = this.props.country.borders;
+    let countries = this.props.allCountries;
+    let neighArray = [];
+    for(let i = 0; i < neighbours.length; i++){
+      for(let country of countries){
+        if(country.alpha3Code === neighbours[i])
+        neighArray.push(
+          <button className="mini-button" alphacode={country.alpha3Code} onClick={this.props.detailMethod} key={country.alpha3Code}>{country.name}</button>)
+      }
+    }
+    return neighArray;
+  }
   render() {
     let country = this.props.country;
-    // <li><b>Currencies:</b>{country.currencies[0]}</li>
-    // <li><b>Languages:</b>{country.languages[0]}</li>
     return (
       <section className="country-detail-container">
-      <button className="mini-button return-button"><i className="fas fa-long-arrow-alt-left"></i> Back</button>
+      <button className="mini-button return-button" onClick={this.props.returnMethod}><i className="fas fa-long-arrow-alt-left"></i> Back</button>
       <div className="country-details">
           <img src={country.flag} alt="" />
 
@@ -209,16 +258,14 @@ class DetailSection extends Component {
 
               <ul>
                   <li><b>Top Level Domain:</b> {country.topLevelDomain}</li>
-
+                   <li><b>Currencies:</b> {this.currencyList()}</li>
+                   <li><b>Languages:</b> {this.languagesList()}</li>
               </ul>
           </div>
               <div>
                   <h3>Border Countries:</h3>
                   <div className="border-container">
-                      <button className="mini-button">France</button>
-                      <button className="mini-button">Germany</button>
-                      <button className="mini-button">NetherLands</button>
-                      <button className="mini-button">NetherLands</button>
+                  {this.neighboursButtons()}
                   </div>
               </div>
           </div>
