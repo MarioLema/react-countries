@@ -328,3 +328,24 @@ nav button:hover {
         display: flex;
     }
 }
+/*----------------------------------------*/
+.intro-container{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	width: 90%;
+	height: 80%;
+	background: #5c5c5cad;
+	max-width: 70rem;
+	max-height: 35rem;
+    border-radius: 10px;
+    z-index: 10000;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+.intro-container img{
+        height: 10rem;
+        margin: auto;
+        display: block;
+        margin-top: 2rem;
+}

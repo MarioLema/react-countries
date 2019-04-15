@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NavBar from "./navbar";
 import CurrentPage from "./pageloader";
+import Carla from "./shadowCarla.svg";
 import "./App.css";
 
 const axios = require("axios");
@@ -179,6 +180,7 @@ class App extends Component {
         style={{ background: this.state.currentTheme.background }}
       >
         <NavBar style={this.state} changeTheme={this.changeTheme} />
+        <TextExpl />
         <CurrentPage
           state={this.state}
           detailMethod={this.displayDetail}
@@ -190,5 +192,18 @@ class App extends Component {
     );
   }
 }
+
+
+class TextExpl extends Component {
+  render(){
+    return (
+      <div className="intro-container">
+      <img src={Carla} alt=""></img>
+      </div>
+    )
+  }
+}
+
+
 
 export default App;
