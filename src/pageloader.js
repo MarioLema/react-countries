@@ -9,6 +9,7 @@ class CurrentPage extends Component {
       return (
         <React.Fragment>
           <SearchingSection
+            region={this.props.state.region}
             style={this.props.state.currentTheme}
             filterInput={this.props.filterInput}
             filterRegion={this.props.filterRegion}

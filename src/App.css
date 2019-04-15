@@ -54,9 +54,16 @@ nav div {
 }
 
 nav button {
-    border: none;
-    background: none;
-    color: white;
+	border: none;
+	background: none;
+	color: white;
+	padding: 0.4rem 0rem;
+    border-bottom: solid #fff0 1px;
+    transition: all 200ms;
+    cursor: pointer;
+}
+nav button:hover {
+	border-bottom: solid rgba(126, 126, 126, 0.55) 1px;
 }
 /*====================BUTTON STYLING=================*/
 .mini-button {
@@ -67,8 +74,11 @@ nav button {
     border-radius: 3px;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.47);
     cursor: pointer;
+    transition: all 200ms;
 }
-
+.mini-button:hover{
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.83);
+}
 /*====================SEARCH MENUS=================*/
 .search-options {
     margin: auto;
@@ -105,8 +115,18 @@ nav button {
     padding-left: 2rem;
     background: rgb(43, 56, 69);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.47);
+    transition: all 200ms;
+    margin: 1rem 0;
+}
+@media screen and (min-width: 36rem) {
+    .search-box {
+    margin: 0;
+    }
 }
 
+.search-box:hover{
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.83);
+}
 #search-input {
     width: 100%;
     border: none;
@@ -114,7 +134,6 @@ nav button {
     margin-left: 1rem;
     background: none;
     color: white;
-
 }
 
 .custom-select {
@@ -131,19 +150,29 @@ nav button {
     font-size: 0.8rem;
     cursor: pointer;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.47);
+    transition: all 200ms;
+}
+.custom-select:hover{
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.83);
 }
 
 .custom-options {
     position: absolute;
-    bottom: -9.5rem;
+    bottom: -10.5rem;
     background: rgb(43, 56, 69);
+    padding: 1rem 0;
     width: 100%;
-    padding: 1rem 2rem;
     list-style: none;
     border-radius: 5px;
     cursor: pointer;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.47);
     display: none;
+}
+.custom-options li {
+	padding: 0.1rem 2rem;
+}
+.custom-options li:hover {
+	background: #80808082;
 }
 .revealed{
     display: block;
@@ -178,6 +207,11 @@ nav button {
     background-color: rgb(43, 56, 69);
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.47);
     cursor: pointer;
+    transition: all 200ms;
+}
+.country-card:hover{
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.83);
+    transform: scale(1.05);
 }
 .country-card div {
 	height: 12em;

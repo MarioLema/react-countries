@@ -36,7 +36,8 @@ class App extends Component {
         currencies: [],
         languages: []
       },
-      currentPage: `home`
+      currentPage: `home`,
+      region: `Filter by Region`
     };
     this.changeTheme = this.changeTheme.bind(this);
     this.displayDetail = this.displayDetail.bind(this);
@@ -75,7 +76,7 @@ class App extends Component {
           this.setState({
             allCountries: response.data,
             filteredCountries: response.data,
-            displayedCountries: response.data,
+            displayedCountries: response.data.slice(0, 11),
             detailCountry: response.data[17]
           });
         }.bind(this)
@@ -134,33 +135,41 @@ class App extends Component {
       }
       return false;
     });
+    let displayedCountries = filteredCountries.length > 11 ? filteredCountries.slice(0,11) : filteredCountries;
     this.setState({
       filteredCountries: filteredCountries,
-      displayedCountries: filteredCountries,
+      displayedCountries: displayedCountries,
     });
   }
 
   //FILTERS COUNTRIES DEPENDING ON THE REGION PASSED AS ARGUMENT
   filterRegion(region) {
-    console.log(region);
     if(region === `All`){
       this.setState({
-        displayedCountries: this.state.allCountries,
+        displayedCountries: this.state.allCountries.slice(0, 11),
         filteredCountries: this.state.allCountries,
+        region: region
       })
     }else{
       let filteredCountries = this.state.allCountries.filter( country => country.region === region);
+      let displayedCountries = filteredCountries.length > 11 ? filteredCountries.slice(0,11) : filteredCountries;
       this.setState({
-        displayedCountries: filteredCountries,
+        displayedCountries: displayedCountries,
         filteredCountries: filteredCountries,
+        region: region
       })
     }
   }
 
   bottomScroll(event){
-    console.log(event);
-    const bottom = event.target.scrollHeight - event.target.scrollTop === event.target.clientHeight;
-    if (bottom) { console.log('botttom')}
+    let domHeight = document.body.clientHeight - window.innerHeight;
+    if(domHeight === event.pageY && this.state.displayedCountries.length !== this.state.filteredCountries.length){
+      let newDisplayed = [...this.state.displayedCountries];
+      let nextDisplay = this.state.filteredCountries.slice(newDisplayed.length, newDisplayed.length + 11);
+      this.setState({
+        displayedCountries: [...newDisplayed, ...nextDisplay]
+      });
+    };
   }
 
   render() {

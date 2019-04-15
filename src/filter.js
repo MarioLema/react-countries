@@ -45,7 +45,7 @@ class SearchingSection extends Component {
           style={{ background: style.elements, color: style.color }}
           onClick={this.toggleMenu}
         >
-          <p>Filter by Region</p>
+          <p>{this.props.region}</p>
           <i className="fas fa-chevron-down" />
           <ul
             className={this.state.regionMenuClasses.join(` `)}
