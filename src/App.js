@@ -1,10 +1,17 @@
+//REACT IMPORT
 import React, { Component } from "react";
+
+//COMPONENTS IMPORTS
 import NavBar from "./navbar";
 import CurrentPage from "./pageloader";
-import Carla from "./shadowCarla.svg";
+
+//STYLING IMPORTS
 import "./App.css";
 
+//AXIOS
 const axios = require("axios");
+
+//COLOR THEME VARIABLES
 const DARK = {
   background: `hsl(207, 26%, 17%)`,
   color: `hsl(0, 0%, 100%)`,
@@ -62,14 +69,14 @@ class App extends Component {
       });
     }
   }
- 
 
+  //REMOVES THE SCROLL EVENT LISTENER
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.bottomScroll);
-}
-  //MAKES A REQUEST WHEN THE COMPONENT IS LOADED
+    window.removeEventListener("scroll", this.bottomScroll);
+  }
+  //MAKES AN API REQUEST WHEN THE COMPONENT IS LOADED / ADDS A SCROLL LISTENER
   componentDidMount() {
-    window.addEventListener('scroll', this.bottomScroll);
+    window.addEventListener("scroll", this.bottomScroll);
     axios
       .get(`https://restcountries.eu/rest/v2/all`)
       .then(
@@ -77,17 +84,12 @@ class App extends Component {
           this.setState({
             allCountries: response.data,
             filteredCountries: response.data,
-            displayedCountries: response.data.slice(0, 11),
-            detailCountry: response.data[17]
+            displayedCountries: response.data.slice(0, 11)
           });
         }.bind(this)
       )
       .catch(function(error) {
-        // handle error
         console.log(error);
-      })
-      .then(function() {
-        // always executed
       });
   }
 
@@ -119,58 +121,73 @@ class App extends Component {
 
   //FILTERS COUNTRIES BY INPUT
   filterInput(event) {
-    // if(event.target.value.length < 2) return;
-    let input = new RegExp(event.target.value, 'i');
-    let filteredCountries = this.state.allCountries.filter( function(country){
+    let input = new RegExp(event.target.value, "i");
+    let filteredCountries = this.state.allCountries.filter(function(country) {
       //check values in different properties of the object
-      if(input.length === 2 && input.test(country.alpha2Code)) return true;
-      if(input.length === 3 && input.test(country.alpha3Code)) return true;
-      if(input.length === 3 && input.test(country.numericCode)) return true;
-      if(input.test(country.name)) return true;
-      if(input.test(country.nativeName)) return true;
-      for(let i = 0; i < country.altSpellings.length; i++){
-        if(input.test(country.altSpellings[i])) return true;
+      if (input.length === 2 && input.test(country.alpha2Code)) return true;
+      if (input.length === 3 && input.test(country.alpha3Code)) return true;
+      if (input.length === 3 && input.test(country.numericCode)) return true;
+      if (input.test(country.name)) return true;
+      if (input.test(country.nativeName)) return true;
+      for (let i = 0; i < country.altSpellings.length; i++) {
+        if (input.test(country.altSpellings[i])) return true;
       }
-      for(let lan in country.translations){
-        if(input.test(country.translations[lan])) return true;
+      for (let lan in country.translations) {
+        if (input.test(country.translations[lan])) return true;
       }
       return false;
     });
-    let displayedCountries = filteredCountries.length > 11 ? filteredCountries.slice(0,11) : filteredCountries;
+    let displayedCountries =
+      filteredCountries.length > 11
+        ? filteredCountries.slice(0, 11)
+        : filteredCountries;
     this.setState({
       filteredCountries: filteredCountries,
-      displayedCountries: displayedCountries,
+      displayedCountries: displayedCountries
     });
   }
 
   //FILTERS COUNTRIES DEPENDING ON THE REGION PASSED AS ARGUMENT
   filterRegion(region) {
-    if(region === `All`){
+    if (region === `All`) {
       this.setState({
         displayedCountries: this.state.allCountries.slice(0, 11),
         filteredCountries: this.state.allCountries,
         region: region
-      })
-    }else{
-      let filteredCountries = this.state.allCountries.filter( country => country.region === region);
-      let displayedCountries = filteredCountries.length > 11 ? filteredCountries.slice(0,11) : filteredCountries;
+      });
+    } else {
+      let filteredCountries = this.state.allCountries.filter(
+        country => country.region === region
+      );
+      let displayedCountries =
+        filteredCountries.length > 11
+          ? filteredCountries.slice(0, 11)
+          : filteredCountries;
       this.setState({
         displayedCountries: displayedCountries,
         filteredCountries: filteredCountries,
         region: region
-      })
+      });
     }
   }
 
-  bottomScroll(event){
+  //IF THE BOTTOM OF THE PAGE IS REACHED, CONCAT MORE COUNTRIES TO DISPLAY ARRAY
+  bottomScroll(event) {
     let domHeight = document.body.clientHeight - window.innerHeight;
-    if(domHeight === event.pageY && this.state.displayedCountries.length !== this.state.filteredCountries.length){
+    if (
+      domHeight === event.pageY &&
+      this.state.displayedCountries.length !==
+        this.state.filteredCountries.length
+    ) {
       let newDisplayed = [...this.state.displayedCountries];
-      let nextDisplay = this.state.filteredCountries.slice(newDisplayed.length, newDisplayed.length + 11);
+      let nextDisplay = this.state.filteredCountries.slice(
+        newDisplayed.length,
+        newDisplayed.length + 11
+      );
       this.setState({
         displayedCountries: [...newDisplayed, ...nextDisplay]
       });
-    };
+    }
   }
 
   render() {
@@ -180,7 +197,6 @@ class App extends Component {
         style={{ background: this.state.currentTheme.background }}
       >
         <NavBar style={this.state} changeTheme={this.changeTheme} />
-        <TextExpl />
         <CurrentPage
           state={this.state}
           detailMethod={this.displayDetail}
@@ -192,18 +208,5 @@ class App extends Component {
     );
   }
 }
-
-
-class TextExpl extends Component {
-  render(){
-    return (
-      <div className="intro-container">
-      <img src={Carla} alt=""></img>
-      </div>
-    )
-  }
-}
-
-
 
 export default App;

@@ -1,25 +1,27 @@
 import React, { Component } from "react";
-class SearchingSection extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            regionMenuClasses: [`custom-options`]
-        }
-        this.toggleMenu = this.toggleMenu.bind(this);
-    }
 
-    toggleMenu(){
-        let classes = [...this.state.regionMenuClasses];
-        if(classes.indexOf(`revealed`) === -1){
-            classes.push(`revealed`);
-        }else{
-            classes.pop(`revealed`);
-        }
-        this.setState({
-            regionMenuClasses: classes
-        })
+class SearchingSection extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      regionMenuClasses: [`custom-options`]
+    };
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  //REVEALS OR HIDES THE REGION FILTERING METHOD
+  toggleMenu() {
+    let classes = [...this.state.regionMenuClasses];
+    if (classes.indexOf(`revealed`) === -1) {
+      classes.push(`revealed`);
+    } else {
+      classes.pop(`revealed`);
     }
-    
+    this.setState({
+      regionMenuClasses: classes
+    });
+  }
+
   render() {
     let style = this.props.style;
     return (
@@ -30,8 +32,8 @@ class SearchingSection extends Component {
         >
           <i className="fas fa-search" />
           <input
-          onChange={this.props.filterInput}
-          maxLength="20"
+            onChange={this.props.filterInput}
+            maxLength="20"
             type="text"
             name=""
             id="search-input"
@@ -53,7 +55,9 @@ class SearchingSection extends Component {
           >
             <li onClick={() => this.props.filterRegion(`All`)}>All</li>
             <li onClick={() => this.props.filterRegion(`Africa`)}>Africa</li>
-            <li onClick={() => this.props.filterRegion(`Americas`)}>Americas</li>
+            <li onClick={() => this.props.filterRegion(`Americas`)}>
+              Americas
+            </li>
             <li onClick={() => this.props.filterRegion(`Asia`)}>Asia</li>
             <li onClick={() => this.props.filterRegion(`Europe`)}>Europe</li>
             <li onClick={() => this.props.filterRegion(`Oceania`)}>Oceania</li>

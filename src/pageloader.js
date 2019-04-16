@@ -1,4 +1,7 @@
+//IMPORT REACT
 import React, { Component } from "react";
+
+//IMPORT COMPONENTS
 import HomeSection from "./homepage";
 import SearchingSection from "./filter";
 import DetailSection from "./detailPage";
